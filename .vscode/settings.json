@@ -1,0 +1,16 @@
+{
+  "editor.formatOnSave": true,
+  "files.associations": {
+    "fstream": "cpp",
+    "ios": "cpp",
+    "algorithm": "cpp",
+    "iosfwd": "cpp",
+    "ratio": "cpp",
+    "iostream": "cpp",
+    "__bit_reference": "cpp",
+    "__string": "cpp",
+    "deque": "cpp",
+    "string": "cpp",
+    "type_traits": "cpp"
+  }
+}
