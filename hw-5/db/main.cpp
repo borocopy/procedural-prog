@@ -7,7 +7,6 @@
 using namespace std;
 
 enum QueryTokens { ADD, QUIT, SEARCH, INPUT_ERROR };
-// enum BookFields { AUTHOR, TITLE, RELEASE_YEAR };
 
 typedef struct {
   string author;
@@ -125,22 +124,47 @@ vector<Book *> search_books(ifstream &fin, SearchQuery *search_query) {
   vector<Book *> search_result;
   while (getline(fin, data)) {
 
-    // if (data.find(q) != string::npos) {
-    //   vector<string> buf_book;
-    //   string buf_str = "";
-    //   for (size_t i = 0; i < data.length(); i++) {
-    //     if (data[i] == ',') {
-    //       buf_book.push_back(buf_str);
-    //       buf_str = "";
-    //     } else {
-    //       buf_str += data[i];
-    //     }
-    //   }
+    bool is_compatible = true;
 
-    //   Book *book =
-    //       new_book(buf_book[0], buf_book[1], (uint32_t)stoi(buf_book[2]));
-    //   search_result.push_back(book);
-    // }
+    vector<string> current_data;
+    string buf = "";
+    bool is_whole_string = false;
+    for (size_t i = 0; i < data.length(); i++) {
+      if (data[i] == '"') {
+        is_whole_string = !is_whole_string;
+      }
+      if (data[i] == ',' && !is_whole_string) {
+        current_data.push_back(buf);
+        buf = "";
+      } else {
+        buf += data[i];
+      }
+    }
+
+    current_data.push_back(buf);
+    cout << current_data[0] << current_data[1] << current_data[2] << endl;
+
+    if (search_query->author != "" &&
+        current_data[0].find(search_query->author) == string::npos) {
+      is_compatible = false;
+    }
+    if (search_query->title != "" &&
+        current_data[1].find(search_query->title) == string::npos) {
+      is_compatible = false;
+    }
+    if (search_query->release_year != 0 &&
+        (uint32_t)stoi(current_data[2]) != search_query->release_year) {
+      cout << ((uint32_t)stoi(current_data[2]) != search_query->release_year)
+           << endl;
+      is_compatible = false;
+    }
+
+    if (is_compatible) {
+
+      Book *book = new_book(current_data[0], current_data[1],
+                            (uint32_t)stoi(current_data[2]));
+      search_result.push_back(book);
+    }
   }
 
   return search_result;
@@ -155,9 +179,10 @@ void print_help() {
 }
 
 void write_book(ofstream &fout, Book *book) {
-  fout << book->author << "," << book->title << "," << book->release_year
-       << "\n";
-  fout.flush();
+  fout << "\"" << book->author << "\""
+       << ","
+       << "\"" << book->title << "\""
+       << "," << book->release_year << endl;
 }
 
 bool check_empty(ifstream &pFile) {
