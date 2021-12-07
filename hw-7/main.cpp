@@ -16,7 +16,13 @@ int main() {
   setlocale(0, "");
   uint64_t count = 0;
 
-  vector<int> arr{1, 2, 3, 4, 5, 6, 7, 8, 9, 10};
+  vector<int> arr;
+  uint32_t num = 0;
+  cin >> num;
+
+  for (int i = 1; i <= num; i++) {
+    arr.push_back(i);
+  }
 
   do {
     if (isCorrect(arr))

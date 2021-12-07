@@ -115,7 +115,14 @@ int q4() {
   string buf = "";
   vector<double> nums;
 
+  // while(getline(fin,))
+
   while (fin >> ch && !fin.eof()) {
+    cout << ch << endl;
+    if ((ch == ' ') || (ch == '\n') || (ch == '\t')) {
+      buf = "";
+      continue;
+    }
     if (buf == "" && ch == '-' && !isNegative) {
       buf = "-";
       isNegative = true;
@@ -202,6 +209,6 @@ int main() {
   // q1();
   // q2();
   // q3();
-  // q4();
-  q5();
+  q4();
+  // q5();
 }

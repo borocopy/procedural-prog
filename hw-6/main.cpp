@@ -89,6 +89,6 @@ int q4_34() {
 int main() {
   setlocale(0, "");
   // q4_4();
-  // q4_34();
+  q4_34();
   return 0;
 }
