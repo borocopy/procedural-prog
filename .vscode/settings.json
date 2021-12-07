@@ -11,6 +11,7 @@
     "__string": "cpp",
     "deque": "cpp",
     "string": "cpp",
-    "type_traits": "cpp"
+    "type_traits": "cpp",
+    "ostream": "cpp"
   }
 }

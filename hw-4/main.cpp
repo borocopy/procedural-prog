@@ -1,18 +1,49 @@
+#include <conio.h>
 #include <fstream>
 #include <iostream>
 #include <math.h>
 #include <sstream>
 #include <stdio.h>
 #include <string.h>
+#include <vector>
+#include <windows.h>
 
 using namespace std;
 void testVar(void *v) { cout << v << "\n"; }
 // Задача 1
+bool isDigit(char a) {
+  if (a - '0' >= 0 && a - '0' <= 9)
+    return true;
+  return false;
+}
+
 int q1() {
   ofstream fout;
+  vector<int> a;
+  for (int i = 0; i < 9; i++) {
+    string buf;
+    if (cin >> buf) {
+      for (size_t i = 0; i < buf.length(); i++) {
+        if (!isDigit(buf[i])) {
+          cout << "Некорректный ввод!"
+               << "\n";
+          return 0;
+        }
+      }
+
+      a.push_back(stoi(buf));
+    } else {
+      cout << "Некорректный ввод!"
+           << "\n";
+
+      return 0;
+    }
+  }
   fout.open("q1.txt");
-  fout << "0 1 2 3 4 5 6 7 8 9"
-       << "\n";
+  for (size_t i = 0; i < a.size(); i++) {
+    fout << a[i] << " ";
+  }
+  fout << endl;
   fout.close();
 
   fstream fin("q1.txt", ios::in);
@@ -66,31 +97,80 @@ double circle_sq(double r) { return 3.14159 * r * r; }
 
 // Задача 4
 int q4() {
-  fstream fin("flag.txt", ios::in);
-  char c;
-  int counter = 1;
-  while (fin >> c && !fin.eof()) {
-    cout << c;
-    if (counter % 47 == 0)
-      cout << "\n";
-    counter++;
-  }
+  hwnd hwnd = getconsolewindow();
+  hdc hdc = getdc(hwnd);
+  int x = 10;
 
-  fin.close();
+  hpen hpen;
+  hbrush b1, b2 = createsolidbrush(rgb(0, 0, 0));
+
+  int height = 30;
+  int width = 0;
+  for (int i = 0; i < 7; i++) {
+    selectobject(hdc, createsolidbrush(rgb(255, 0, 0)));
+    rectangle(hdc, 60, 550, 1000, height);
+    height += 40;
+    selectobject(hdc, createsolidbrush(rgb(255, 255, 255)));
+    rectangle(hdc, 60, 550, 1000, height);
+    height += 40;
+  }
+  selectobject(hdc, createsolidbrush(rgb(0, 0, 255)));
+  rectangle(hdc, 60, 311, 480, 30);
+  height = 30;
+  selectobject(hdc, createsolidbrush(rgb(255, 255, 255)));
+  int md = 70;
+  int mw = 80;
+  for (int j = 0; j < 5; j++) {
+    int widthel = 85;
+    int heightel = 95;
+    for (int i = 0; i < 6; i++) {
+      ellipse(hdc, heightel, md, widthel, mw);
+      heightel += 72;
+      widthel += 72;
+    }
+    md += 48;
+    mw += 48;
+  }
+  int sd = 95;
+  int sw = 105;
+  for (int j = 0; j < 4; j++) {
+    int widthel2 = 123;
+    int heightel2 = 133;
+    for (int i = 0; i < 5; i++) {
+      ellipse(hdc, heightel2, sd, widthel2, sw);
+      heightel2 += 72;
+      widthel2 += 72;
+    }
+    sd += 48;
+    sw += 48;
+  }
+  std::cin.ignore();
 
   return 0;
 }
 
 // Задача 5
 int q5() {
-  fstream fin("sin.txt", ios::in);
-  int counter = 1;
-  string line;
-  while (getline(fin, line) && !fin.eof()) {
-    cout << line << "\n";
+  HWND hwnd = GetConsoleWindow();
+  HDC hdc = GetDC(hwnd);
+  int x = 10;
+
+  HPEN p1, p2 = CreatePen(PS_SOLID, 2, RGB(255, 255, 255));
+  HBRUSH b1, b2 = CreateSolidBrush(RGB(255, 255, 255));
+  p1 = (HPEN)SelectObject(hdc, p2);
+  b1 = (HBRUSH)SelectObject(hdc, b2);
+
+  // cout << "y = sin x";
+  for (float i = 7; i < 93; i += 1) {
+    SetPixel(hdc, 323, i, RGB(255, 255, 255));
+  }
+  for (float i = 0; i < 3.14 * 10; i += 0.05) {
+    SetPixel(hdc, x, 50 + 25 * sin(i), RGB(255, 255, 255));
+    SetPixel(hdc, x, 50, RGB(255, 255, 255));
+    x += 1;
   }
 
-  fin.close();
+  std::cin.ignore();
 
   return 0;
 }
@@ -116,11 +196,37 @@ int parseValue(char v) {
 
   return -1;
 }
+
+bool isRomanCorrect(string &a) {
+  char lv = a[0];
+  size_t count = 0;
+  for (size_t i = 0; i < a.length(); i++) {
+    char cv = a[i];
+    if (lv == cv) {
+      count += 1;
+      if (count == 3)
+        return 0;
+    } else {
+      count = 0;
+    }
+
+    lv = cv;
+  }
+
+  return 1;
+}
+
 int q6() {
   string a;
   cout << "Введите число в римской записи:"
        << "\n";
   if (cin >> a) {
+    if (!isRomanCorrect(a)) {
+      cout << "Некорректные входные данные! Три одинаковых символа не могут "
+              "идти подряд!"
+           << endl;
+      return 1;
+    }
     int ans = 0;
     for (int i = 0; i < a.length(); i++) {
       int v1 = parseValue(a[i]);
@@ -165,8 +271,6 @@ int q7() {
   cout << s(13849) << "\n";
   return 0;
 }
-
-// Задача 8 @TODO: доделать
 
 int q8() {
   double m1[3][4] = {{5, 2, 0, 10}, {3, 5, 2, 5}, {20, 0, 0, 0}};
@@ -371,8 +475,8 @@ int main() {
   // q5();
   // q6();
   // q7();
-  q8();
-  // q9();
+  // q8();
+  q9();
 
   return 0;
 }

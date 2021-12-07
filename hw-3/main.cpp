@@ -2,7 +2,9 @@
 #include <iostream>
 #include <math.h>
 #include <stdio.h>
+#include <stdlib.h>
 #include <string.h>
+#include <vector>
 using namespace std;
 
 // Задача 1
@@ -52,15 +54,14 @@ int q2() {
       return 0;
     }
 
-    for (double i = 0.1; i < 100; i += 0.1) {
-      double r = i / 100.0;
-      if (abs(find_m(S, p, n) - m) < 1 || find_m(S, p, n) > m) {
+    for (double i = 0.001; i < 100; i += 0.1) {
+      if (find_m(S, i, n) > m) {
         p = i;
         break;
       }
     }
 
-    cout << "Процент годовых p = " << p << "\n";
+    cout << "Процент годовых p = " << p - 0.001 << "\n";
 
     return 0;
   } else {
@@ -74,11 +75,12 @@ int q2() {
 int q3() {
 
   string input;
+  cout << "Введите строку, которая будет помещена в файл text.txt" << endl;
   getline(cin, input);
 
   ofstream fout;
   fout.open("./text.txt");
-  fout << input << "\n";
+  fout << input << endl;
 
   fout.close();
 
@@ -108,20 +110,51 @@ int q4() {
   }
 
   char ch;
-  string ans = "";
+  bool isDouble = false;
+  bool isNegative = false;
+  string buf = "";
+  vector<double> nums;
 
   while (fin >> ch && !fin.eof()) {
-    if ((ch >= 48) && (ch <= 57)) {
-      ans += ch;
+    if (buf == "" && ch == '-' && !isNegative) {
+      buf = "-";
+      isNegative = true;
+      continue;
+    }
+    if (ch == ',' && !isDouble) {
+      buf += ",";
+      isDouble = true;
+      continue;
+    }
+
+    if (((ch >= 48) && (ch <= 57))) {
+      buf += ch;
+    } else {
+      if (buf != "" && buf != "-" && buf[0] != ',') {
+        isDouble = false;
+        isNegative = false;
+        nums.push_back(stod(buf));
+      }
+      if (ch == '-') {
+        buf = "-";
+      } else {
+        buf = "";
+      }
     }
   }
 
-  cout << ans << "\n";
+  if (buf != "")
+    nums.push_back(stod(buf));
+
+  for (int i = 0; i < nums.size(); i++) {
+    cout << nums[i] << " ";
+  }
+  cout << endl;
   fin.close();
   return 0;
 }
 
-// Задача 5
+// Задача 5 !
 bool isCapital(char a) {
   if (a >= 65 && a <= 90)
     return true;
@@ -139,7 +172,16 @@ char normalizeLetter(char a) {
 }
 
 int q5() {
-  string a = "asdfghjklxcvbnmrtyasdfgABhbnmrty";
+  cout << "Введите строку длиной в 30 символов (на латинице):" << endl;
+  string a;
+  getline(cin, a);
+
+  if (a.size() > 30) {
+    cout << "Введите 30 символов!!!"
+         << "\n";
+    return 0;
+  }
+
   char buf;
   for (int i = 0; i < 30; i++) {
     for (int j = 0; j < 30; j++) {
@@ -157,9 +199,9 @@ int q5() {
 
 int main() {
   setlocale(0, "");
-  q1();
-  q2();
+  // q1();
+  // q2();
   // q3();
   // q4();
-  // q5();
+  q5();
 }
