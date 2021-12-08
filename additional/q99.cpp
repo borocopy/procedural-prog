@@ -11,7 +11,7 @@ pair<uint32_t, uint32_t> processInput(string computed, string guessed) {
   for (size_t i = 0; i < computed.length(); i++) {
     if (computed[i] == guessed[i]) {
       res.first++;
-      cout << (computed[i]) << endl;
+      // cout << (computed[i]) << endl;
       computed.erase(i, 1);
       guessed.erase(i, 1);
       i--;
@@ -28,6 +28,8 @@ pair<uint32_t, uint32_t> processInput(string computed, string guessed) {
 }
 
 bool checkInput(string &a) {
+  if (a.length() != 4)
+    return 0;
   for (size_t i = 0; i < a.length(); i++) {
     if ((a[i] - '0' < 0) || (a[i] - '0' > 9)) {
       return 0;
@@ -42,6 +44,7 @@ int main() {
   setlocale(0, "");
   string buf = "";
   string init_n = to_string(generateRandomNumber());
+  cout << init_n << endl;
   cout << "Компьютер загадал некоторое четырехзначное число. Попробуйте "
           "отгадать его!"
        << endl;
