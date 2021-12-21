@@ -95,10 +95,10 @@ void parseInitField() {
   }
 }
 
-void writeOutput(int16_t i) {
+void writeOutput(int16_t m) {
 
   ofstream fout;
-  string fileName = "work" + to_string(i) + ".out";
+  string fileName = "work" + to_string(m) + ".out";
   fout.open(fileName, ios::out);
 
   for (int16_t i = 0; i < SIZE; i++) {
