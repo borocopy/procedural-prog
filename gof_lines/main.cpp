@@ -95,10 +95,10 @@ void parseInitField() {
   }
 }
 
-void writeOutput() {
+void writeOutput(int16_t i) {
 
   ofstream fout;
-  string fileName = "work.out";
+  string fileName = "work" + to_string(i) + ".out";
   fout.open(fileName, ios::out);
 
   for (int16_t i = 0; i < SIZE; i++) {
@@ -115,7 +115,7 @@ void printGenerationToConsole(int16_t i) {
   cout << "Итерация номер - " << i << endl;
   for (int16_t i = 0; i < SIZE; i++) {
     for (int16_t j = 0; j < SIZE; j++) {
-      cout << (currentGen[i][j] > 0 ? "+" : " ") << ' ';
+      cout << (currentGen[i][j] > 0 ? "1" : "0") << ' ';
     }
 
     cout << endl;
@@ -136,15 +136,16 @@ int main() {
   writeInitField();
   parseInitField();
   for (i = 0; i < n; i++) {
-    printGenerationToConsole(i);
-    this_thread::sleep_for(chrono::milliseconds(1000));
+    writeOutput(i);
+    // printGenerationToConsole(i);
+    // this_thread::sleep_for(chrono::milliseconds(1000));
     bool isAnyAlive = getNextGen() > 0 ? 1 : 0;
     swap(currentGen, nextGen);
     if (!isAnyAlive) {
       break;
     }
   }
-  printGenerationToConsole(i);
-  writeOutput();
+  // printGenerationToConsole(i);
+  writeOutput(i);
   return 0;
 }

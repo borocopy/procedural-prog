@@ -13,6 +13,7 @@
     "string": "cpp",
     "type_traits": "cpp",
     "ostream": "cpp",
-    "utility": "cpp"
+    "utility": "cpp",
+    "chrono": "cpp"
   }
 }
